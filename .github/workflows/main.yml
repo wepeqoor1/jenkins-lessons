@@ -50,7 +50,8 @@ jobs:
           echo "Response: $response"
           
           # Сохраняем ответ в выходную переменную
-          response_body=$response
+          SERVER_RESPONSE_BODY=$response
+          echo "SERVER_RESPONSE_BODY=$SERVER_RESPONSE_BODY" >> $GITHUB_ENV  # TODO проверить можно ли в одну строку сохранять глобальные переменные
         shell: bash
 
       - name: Use the response
