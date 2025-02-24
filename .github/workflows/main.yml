@@ -66,8 +66,8 @@ jobs:
       - name: Compare BuildName and service responce
         run: | 
           # Проверяем ответ от сервера и номер релиза из appsettings.json
-          echo "SERVER_RESPONSE ${{ env.APSETTINGS_RELEASE_VERSION }}"
-          echo "APSETTINGS_RELEASE_VERSION ${{ env.SERVER_RESPONSE }}"
+          echo "APSETTINGS_RELEASE_VERSION ${{ env.APSETTINGS_RELEASE_VERSION }}"
+          echo "SERVER_RESPONSE ${{ env.SERVER_RESPONSE }}"
           
           if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" == ${{ env.SERVER_RESPONSE }} ]; then
             echo "Все хорошо: значения равны."
