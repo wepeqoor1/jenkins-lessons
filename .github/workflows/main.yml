@@ -1,10 +1,10 @@
 name: Compose Dashboard Backend Build
 
 on:
+  workflow_dispatch:
   push:
     # tags:
     #   - v*
-    orkflow_dispatch:
     branches:
       main
 
@@ -27,23 +27,26 @@ jobs:
       - name: Update local repository
         run: |
           cd ${{ env.PROJECT_ROOT }}
-          # Проверяем, есть ли изменения
+
           if git diff --quiet; then
-            echo "Nothing to commit"
-            git pull
+            echo "true"
           else
-            echo "Changes not staged for commit"
-            git add .
-            git stash
-            git pull origin main
-            git stash pop
+            echo "false"
           fi
-          
-          # git fetch --all
-          # git add .
-          # git stash
-          # git pull origin main
-          # git stash pop
+
+          # # Проверяем, есть ли изменения
+          # if git status -s; then
+          #   echo "Nothing to commit"
+          #   echo " Start Pulling"
+          #   git pull
+          # else
+          #   echo "Changes not staged for commit"
+          #   echo "Lock no staged files and start Pulling"
+          #   git add .
+          #   git stash
+          #   git pull origin main
+          #   git stash pop
+          # fi
         shell: bash
 
       # # Получает тег  # TODO не забыть вернуть
