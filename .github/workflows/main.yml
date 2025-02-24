@@ -3,7 +3,7 @@ name: Compose Dashboard Backend Build
 on:
   push:
     tags:
-      - v.*.*.*
+      - v*.*.*
 
 jobs:
   build-and-package:
@@ -25,13 +25,16 @@ jobs:
         run: |
           echo ${{ env.RELEASE_VERSION }}
 
-      # Конфигурируем приложение
+      # Проставляем версию приложения в appsettings.json
+      # Конфигураруем приложение
       - name: Configure appsettings.json
         uses: actions-json/json-edit@v1
         with:
-          file: "./appsettings.compose.json"
+          file: "$WORKDIR/appsettings.compose.json"
           key: "BuildName"
           value: "Smartan Backend Service ${{ env.RELEASE_VERSION }}"
 
       - name: Test appsettings.json
         run: "echo appsettings.compose.json"
+
+      
