@@ -30,7 +30,8 @@ jobs:
       # Проставляем версию BuildName приложения в appsettings.json
       - name: Configure appsettings.json
         run: |
-          APSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }} >> $GITHUB_ENV"
+          APSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }}"
+          echo "APSETTINGS_RELEASE_VERSION=$APSETTINGS_RELEASE_VERSION">> $GITHUB_ENV
           sed -i 's|"BuildName":.*|"BuildName": "${{ env.APSETTINGS_RELEASE_VERSION }}",|' \
           "${{ env.WORKDIR }}/appsettings.compose.json"
         shell: bash
@@ -56,14 +57,18 @@ jobs:
         run: |
           # Используем сохранённый ответ
           SERVER_RESPONSE=${{ steps.get_request.outputs.response_body }}
+          echo "SERVER_RESPONSE=$SERVER_RESPONSE" >> $GITHUB_ENV
+          
           echo "The response body was: ${{ env.SERVER_RESPONSE }}"
 
       
       # Сравниваем занчение "BuildName" из "appsettings.compose.json" и ответ от сервера из "Send GET request and get response"
       - name: Compare BuildName and service responce
         run: | 
+          # Проверяем ответ от сервера и номер релиза из appsettings.json
           echo "SERVER_RESPONSE ${{ env.APSETTINGS_RELEASE_VERSION }}"
           echo "APSETTINGS_RELEASE_VERSION ${{ env.SERVER_RESPONSE }}"
+          
           if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" == ${{ env.SERVER_RESPONSE }} ]; then
             echo "Все хорошо: значения равны."
           else
