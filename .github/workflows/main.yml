@@ -30,8 +30,9 @@ jobs:
       # Проставляем версию BuildName приложения в appsettings.json
       - name: Configure appsettings.json
         run: |
-            sed -i 's|"BuildName":.*|"BuildName": "Smartan Backend Service ${{ env.RELEASE_VERSION }}",|' \
-                "${{ env.WORKDIR }}/appsettings.compose.json"
+          APSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }}"
+          sed -i 's|"BuildName":.*|"BuildName": "${{ env.APSETTINGS_RELEASE_VERSION }}",|' \
+          "${{ env.WORKDIR }}/appsettings.compose.json"
         shell: bash
 
       - name: Test appsettings.json
@@ -54,7 +55,19 @@ jobs:
       - name: Use the response
         run: |
           # Используем сохранённый ответ
-          echo "The response body was: ${{ steps.get_request.outputs.response_body }}"
+          SERVER_RESPONSE=${{ steps.get_request.outputs.response_body }}
+          echo "The response body was: ${{ env.SERVER_RESPONSE }}"
+
+      
+      # Сравниваем занчение "BuildName" из "appsettings.compose.json" и ответ от сервера из "Send GET request and get response"
+      - name: Compare BuildName and service responce
+        run: | 
+          if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" == ${{ env.SERVER_RESPONSE }} ]; then
+            echo "Все хорошо: значения равны."
+          else
+            echo "Ошибка: значения не равны."
+            exit 1  # Завершаем скрипт с ошибкой
+          fi
 
       
 
