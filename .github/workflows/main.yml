@@ -35,6 +35,6 @@ jobs:
         shell: bash
 
       - name: Test appsettings.json
-        run: echo "appsettings.compose.json"
+        run: cat appsettings.compose.json
 
       
