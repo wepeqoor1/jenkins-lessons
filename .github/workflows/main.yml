@@ -28,7 +28,7 @@ jobs:
         run: |
           cd ${{ env.PROJECT_ROOT }}
 
-          if git diff --quiet; then
+          if [ -z "$(git status -s)" ]; then
             echo "true"
           else
             echo "false"
