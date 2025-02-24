@@ -49,7 +49,7 @@ jobs:
           echo "Response: $response"
           
           # Сохраняем ответ в выходную переменную
-          echo "::set-output name=response_body::$response"
+          "response_body=$response" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Use the response
