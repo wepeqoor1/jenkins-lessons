@@ -66,7 +66,7 @@ jobs:
           echo "APSETTINGS_RELEASE_VERSION: ${{ env.APSETTINGS_RELEASE_VERSION }}"
           echo "SERVER_RESPONSE_BODY: ${{ env.SERVER_RESPONSE_BODY }}"
           
-          if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" == ${{ env.SERVER_RESPONSE }} ]; then
+          if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" == "${{ env.SERVER_RESPONSE }}" ]; then
             echo "Все хорошо: значения равны."
           else
             echo "Ошибка: значения не равны."
