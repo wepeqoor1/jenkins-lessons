@@ -2,12 +2,15 @@ name: Compose Dashboard Backend Build
 
 on:
   push:
-    tags:
-      - v*
+    # tags:
+    #   - v*
+    branches:
+      main
 
 env:
   WORKDIR: .
   PROJECT_ROOT: .
+  RELEASE_VERSION: "v1"
 
 jobs:
   build-and-package:
@@ -26,24 +29,25 @@ jobs:
           git fetch --all
           git add .
           git stash
-          git pull
+          git pull origin main
           git stash pop
         shell: bash
 
-      # Получает тег
-      - uses: actions/checkout@v2
-      - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      # # Получает тег
+      # - uses: actions/checkout@v2  TODO проверить 4 версию
+      # - name: Set env
+      #   run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       
-      - name: Test RELEASE_VERSION
-        run: echo RELEASE_VERSION ${{ env.RELEASE_VERSION }}
+      # - name: Test RELEASE_VERSION
+      #   run: echo RELEASE_VERSION ${{ env.RELEASE_VERSION }}
 
       # Проставляем версию BuildName приложения в appsettings.json
       - name: Configure appsettings.json
         run: |
-          APSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }}"
-          echo "APSETTINGS_RELEASE_VERSION=$APSETTINGS_RELEASE_VERSION">> $GITHUB_ENV
-          sed -i 's|"BuildName":.*|"BuildName": "${{ env.APSETTINGS_RELEASE_VERSION }}",|' \
+          APPSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }}"
+          echo "APPSETTINGS_RELEASE_VERSION=$APPSETTINGS_RELEASE_VERSION">> $GITHUB_ENV
+
+          sed -i 's|"BuildName":.*|"BuildName": "${{ env.APPSETTINGS_RELEASE_VERSION }}",|' \
           "${{ env.WORKDIR }}/appsettings.compose.json"
         shell: bash
 
@@ -74,13 +78,13 @@ jobs:
       - name: Compare BuildName and service responce
         run: | 
           # Проверяем ответ от сервера и номер релиза из appsettings.json
-          echo "APSETTINGS_RELEASE_VERSION: ${{ env.APSETTINGS_RELEASE_VERSION }}"
+          echo "APPSETTINGS_RELEASE_VERSION: ${{ env.APPSETTINGS_RELEASE_VERSION }}"
           echo "SERVER_RESPONSE_BODY: ${{ env.SERVER_RESPONSE_BODY }}"
           
-          if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" == "${{ env.SERVER_RESPONSE_BODY }}" ]; then
+          if [ "${{ env.APPSETTINGS_RELEASE_VERSION }}" == "${{ env.SERVER_RESPONSE_BODY }}" ]; then
             echo "Все хорошо: значения равны."
           fi
-          if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" != "${{ env.SERVER_RESPONSE_BODY }}" ]; then
+          if [ "${{ env.APPSETTINGS_RELEASE_VERSION }}" != "${{ env.SERVER_RESPONSE_BODY }}" ]; then
             echo "Ошибка: значения не равны."
             exit 1  # Завершаем скрипт с ошибкой
           fi
