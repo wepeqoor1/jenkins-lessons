@@ -5,6 +5,9 @@ on:
     tags:
       - v*.*.*
 
+env:
+  WORKDIR: .
+
 jobs:
   build-and-package:
     name: Build and Package Backend
@@ -22,19 +25,16 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       
       - name: Test RELEASE_VERSION
-        run: |
-          echo ${{ env.RELEASE_VERSION }}
+        run: echo RELEASE_VERSION ${{ env.RELEASE_VERSION }}
 
-      # Проставляем версию приложения в appsettings.json
-      # Конфигураруем приложение
+      # Проставляем версию BuildName приложения в appsettings.json
       - name: Configure appsettings.json
-        uses: actions-json/json-edit@v1
-        with:
-          file: "$WORKDIR/appsettings.compose.json"
-          key: "BuildName"
-          value: "Smartan Backend Service ${{ env.RELEASE_VERSION }}"
+        run: |
+            sed -i 's|"BuildName":.*|"BuildName": "Smartan Backend Service ${{ env.RELEASE_VERSION }}",|' \
+                "${{ env.WORKDIR }}/appsettings.compose.json"
+        shell: bash
 
       - name: Test appsettings.json
-        run: "echo appsettings.compose.json"
+        run: echo appsettings.compose.json
 
       
