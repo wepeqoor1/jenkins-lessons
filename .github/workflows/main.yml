@@ -27,7 +27,7 @@ jobs:
       - name: Update local repository
         run: |
           cd ${{ env.PROJECT_ROOT }}
-          git fetch --all
+          # git fetch --all
           git add .
           git stash
           git pull origin main
