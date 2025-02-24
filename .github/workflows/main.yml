@@ -37,4 +37,25 @@ jobs:
       - name: Test appsettings.json
         run: cat appsettings.compose.json
 
+      # Отправляем запрос на healthcheck
+      - name: Send GET request and get response
+        id: get_request
+        run: |
+          # Отправляем GET-запрос и сохраняем ответ в переменную
+          response=$(curl -s -X GET http://84.38.186.34/api/healthcheck)
+          
+          # Выводим ответ в лог
+          echo "Response: $response"
+          
+          # Сохраняем ответ в выходную переменную
+          echo "::set-output name=response_body::$response"
+        shell: bash
+
+      - name: Use the response
+        run: |
+          # Используем сохранённый ответ
+          echo "The response body was: ${{ steps.get_request.outputs.response_body }}"
+
+      
+
       
