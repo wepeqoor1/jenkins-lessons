@@ -49,7 +49,7 @@ jobs:
           echo "Response: $response"
           
           # Сохраняем ответ в выходную переменную
-          "response_body=$response"
+          response_body=$response
         shell: bash
 
       - name: Use the response
