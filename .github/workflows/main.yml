@@ -51,12 +51,8 @@ jobs:
           
           # Сохраняем ответ в выходную переменную
           SERVER_RESPONSE_BODY=$response
-        shell: bash
 
-      - name: Use the response
-        run: |
           # Используем сохранённый ответ
-          SERVER_RESPONSE_BODY=${{ steps.get_request.outputs.response_body }}
           echo "SERVER_RESPONSE_BODY=$SERVER_RESPONSE_BODY" >> $GITHUB_ENV
           
           echo "The response body was: ${{ env.SERVER_RESPONSE_BODY }}"
