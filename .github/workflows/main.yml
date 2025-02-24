@@ -43,13 +43,13 @@ jobs:
         id: get_request
         run: |
           # Отправляем GET-запрос и сохраняем ответ в переменную
-          response=$(curl -s -X GET http://89.23.117.184/api/healthcheck)
+          response=$(curl -s -X GET http://89.23.117.184/api/healthcheck) 
           
           # Выводим ответ в лог
           echo "Response: $response"
           
           # Сохраняем ответ в выходную переменную
-          "response_body=$response" >> $GITHUB_OUTPUT
+          "response_body=$response"
         shell: bash
 
       - name: Use the response
