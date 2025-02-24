@@ -27,11 +27,23 @@ jobs:
       - name: Update local repository
         run: |
           cd ${{ env.PROJECT_ROOT }}
+          # Проверяем, есть ли изменения
+          if git diff --quiet; then
+            echo "Nothing to commit"
+            git pull
+          else
+            echo "Changes not staged for commit"
+            git add .
+            git stash
+            git pull origin main
+            git stash pop
+          fi
+          
           # git fetch --all
-          git add .
-          git stash
-          git pull origin main
-          git stash pop
+          # git add .
+          # git stash
+          # git pull origin main
+          # git stash pop
         shell: bash
 
       # # Получает тег  # TODO не забыть вернуть
