@@ -1,0 +1,27 @@
+name: Compose Dashboard Backend Build
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build-and-package:
+    name: Build and Package Backend
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+    # Получает тег
+      - uses: actions/checkout@v2
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      
+      - name: Test RELEASE_VERSION
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
