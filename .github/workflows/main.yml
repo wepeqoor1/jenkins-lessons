@@ -4,6 +4,7 @@ on:
   push:
     # tags:
     #   - v*
+    orkflow_dispatch:
     branches:
       main
 
