@@ -43,7 +43,7 @@ jobs:
         id: get_request
         run: |
           # Отправляем GET-запрос и сохраняем ответ в переменную
-          response=$(curl -s -X GET http://84.38.186.34/api/healthcheck)
+          response=$(curl -s -X GET http://89.23.117.184/api/healthcheck)
           
           # Выводим ответ в лог
           echo "Response: $response"
