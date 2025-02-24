@@ -51,24 +51,24 @@ jobs:
           
           # Сохраняем ответ в выходную переменную
           SERVER_RESPONSE_BODY=$response
-          echo "SERVER_RESPONSE_BODY=$SERVER_RESPONSE_BODY" >> $GITHUB_ENV  # TODO проверить можно ли в одну строку сохранять глобальные переменные
         shell: bash
 
       - name: Use the response
         run: |
           # Используем сохранённый ответ
-          SERVER_RESPONSE=${{ steps.get_request.outputs.response_body }}
-          echo "SERVER_RESPONSE=$SERVER_RESPONSE" >> $GITHUB_ENV
+          SERVER_RESPONSE_BODY=${{ steps.get_request.outputs.response_body }}
+          echo "SERVER_RESPONSE_BODY=$SERVER_RESPONSE_BODY" >> $GITHUB_ENV
           
-          echo "The response body was: ${{ env.SERVER_RESPONSE }}"
+          echo "The response body was: ${{ env.SERVER_RESPONSE_BODY }}"
+        shell: bash
 
       
       # Сравниваем занчение "BuildName" из "appsettings.compose.json" и ответ от сервера из "Send GET request and get response"
       - name: Compare BuildName and service responce
         run: | 
           # Проверяем ответ от сервера и номер релиза из appsettings.json
-          echo "APSETTINGS_RELEASE_VERSION ${{ env.APSETTINGS_RELEASE_VERSION }}"
-          echo "SERVER_RESPONSE ${{ env.SERVER_RESPONSE }}"
+          echo "APSETTINGS_RELEASE_VERSION: ${{ env.APSETTINGS_RELEASE_VERSION }}"
+          echo "SERVER_RESPONSE_BODY: ${{ env.SERVER_RESPONSE_BODY }}"
           
           if [ "${{ env.APSETTINGS_RELEASE_VERSION }}" == ${{ env.SERVER_RESPONSE }} ]; then
             echo "Все хорошо: значения равны."
@@ -76,3 +76,4 @@ jobs:
             echo "Ошибка: значения не равны."
             exit 1  # Завершаем скрипт с ошибкой
           fi
+        shell: bash
