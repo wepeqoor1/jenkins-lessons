@@ -34,7 +34,7 @@ jobs:
           git stash pop
         shell: bash
 
-      # # Получает тег
+      # # Получает тег  # TODO не забыть вернуть
       # - uses: actions/checkout@v2  TODO проверить 4 версию
       # - name: Set env
       #   run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
