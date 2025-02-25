@@ -67,7 +67,7 @@ jobs:
         run: |
           sed -i 's|"BuildName":.*|"BuildName": "${{ env.APPSETTINGS_RELEASE_VERSION }}",|' \
             "${{ env.WORKDIR }}/appsettings.compose.json"
-          shell: bash
+        shell: bash
 
       # Отправляем запрос на healthcheck
       - name: Send GET request and get response
