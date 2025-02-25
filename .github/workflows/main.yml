@@ -57,10 +57,17 @@ jobs:
         run: |
           APPSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }}" >> $GITHUB_ENV
           # echo "APPSETTINGS_RELEASE_VERSION=$APPSETTINGS_RELEASE_VERSION"
-
-          sed -i 's|"BuildName":.*|"BuildName": "${{ env.APPSETTINGS_RELEASE_VERSION }}",|' \
-          "${{ env.WORKDIR }}/appsettings.compose.json"
         shell: bash
+
+      - name: Print Release version
+        run: |
+          echo "APPSETTINGS_RELEASE_VERSION: ${{ env.APPSETTINGS_RELEASE_VERSION }}"
+
+      - name: Edit Release version in config file
+        run: |
+          sed -i 's|"BuildName":.*|"BuildName": "${{ env.APPSETTINGS_RELEASE_VERSION }}",|' \
+            "${{ env.WORKDIR }}/appsettings.compose.json"
+          shell: bash
 
       # Отправляем запрос на healthcheck
       - name: Send GET request and get response
