@@ -27,26 +27,21 @@ jobs:
       - name: Update local repository
         run: |
           cd ${{ env.PROJECT_ROOT }}
-
+          # Проверяем, есть ли изменения
           if [ -z "$(git status -s)" ]; then
-            echo "true"
+            echo "Nothing to commit"
+            echo " Start Pulling"
+            git fetch --all
+            git pull
           else
-            echo "false"
+            echo "Changes not staged for commit"
+            echo "Lock no staged files and start Pulling"
+            git add .
+            git stash
+            git fetch --all
+            git pull
+            git stash pop
           fi
-
-          # # Проверяем, есть ли изменения
-          # if git status -s; then
-          #   echo "Nothing to commit"
-          #   echo " Start Pulling"
-          #   git pull
-          # else
-          #   echo "Changes not staged for commit"
-          #   echo "Lock no staged files and start Pulling"
-          #   git add .
-          #   git stash
-          #   git pull origin main
-          #   git stash pop
-          # fi
         shell: bash
 
       # # Получает тег  # TODO не забыть вернуть
@@ -60,15 +55,12 @@ jobs:
       # Проставляем версию BuildName приложения в appsettings.json
       - name: Configure appsettings.json
         run: |
-          APPSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }}"
-          echo "APPSETTINGS_RELEASE_VERSION=$APPSETTINGS_RELEASE_VERSION">> $GITHUB_ENV
+          APPSETTINGS_RELEASE_VERSION="Smartan Backend Service ${{ env.RELEASE_VERSION }}" >> $GITHUB_ENV
+          # echo "APPSETTINGS_RELEASE_VERSION=$APPSETTINGS_RELEASE_VERSION"
 
           sed -i 's|"BuildName":.*|"BuildName": "${{ env.APPSETTINGS_RELEASE_VERSION }}",|' \
           "${{ env.WORKDIR }}/appsettings.compose.json"
         shell: bash
-
-      - name: Test appsettings.json
-        run: cat appsettings.compose.json
 
       # Отправляем запрос на healthcheck
       - name: Send GET request and get response
